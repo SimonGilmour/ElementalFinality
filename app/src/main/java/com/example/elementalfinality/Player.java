@@ -3,10 +3,19 @@ package com.example.elementalfinality;
 public class Player {
 
     public int health;
+
     public boolean frozen;
     public boolean cursed;
     public boolean poisoned;
-    public boolean noDamage;
+
+
+
+
+    public boolean isStunned() {
+        return stunned;
+    }
+
+    public boolean stunned;
     public boolean usedWild;
 
 
@@ -44,11 +53,11 @@ public class Player {
     }
 
     public boolean isNoDamage() {
-        return noDamage;
+        return stunned;
     }
 
-    public void setNoDamage(boolean noDamage) {
-        this.noDamage = noDamage;
+    public void setStunned(boolean stunned) {
+        this.stunned = stunned;
     }
 
     public boolean isUsedWild() {
@@ -61,14 +70,15 @@ public class Player {
 
 
     public Player(int health, boolean frozen,
-                  boolean cursed, boolean poisoned, boolean noDamage, boolean usedWild)
+                  boolean cursed, boolean poisoned, boolean stunned, boolean usedWild)
     {
         this.health = health;
         this.frozen = frozen;
         this.cursed = cursed;
         this.poisoned = poisoned;
-        this.noDamage = noDamage;
+        this.stunned = stunned;
         this.usedWild = usedWild;
+
     }
 
     public boolean isDead(int health)
@@ -81,5 +91,10 @@ public class Player {
         {
             return false;
         }
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%s\n", this.health);
     }
 }
