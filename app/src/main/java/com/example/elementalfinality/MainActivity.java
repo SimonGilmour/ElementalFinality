@@ -273,7 +273,7 @@ public class MainActivity extends AppCompatActivity {
                 case 1:
 
                     obButton[i].setTag("Fire");
-                    obButton[i].setBackgroundResource(R.drawable.freeze);
+                    obButton[i].setBackgroundResource(R.drawable.fire);
                     break;
                 case 2:
 
@@ -287,7 +287,7 @@ public class MainActivity extends AppCompatActivity {
                     break;
                 case 4:
                     obButton[i].setTag("Dark");
-                    obButton[i].setBackgroundResource(R.drawable.freeze);
+                    obButton[i].setBackgroundResource(R.drawable.dark);
                     break;
                 case 5:
                     obButton[i].setTag("Wild");
