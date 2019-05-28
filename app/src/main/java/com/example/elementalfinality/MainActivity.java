@@ -1,24 +1,22 @@
 package com.example.elementalfinality;
 
-import android.animation.Animator;
-import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.view.animation.RotateAnimation;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
     TextView playerHealth;
+    TextView cardDescription;
     ImageButton[] obButton = new ImageButton[5];
     String obBossCard;
-    Player player1 = new Player(30, false, false, false, false, false);
-    Player obBoss = new Player(50, false, false, false, false, false);
+    Player player1 = new Player(0, false, false, false, false, false);
+    Player obBoss = new Player(0, false, false, false, false, false);
 
     int playerPoisonCount = 0;
     int bossPoisonCount = 0;
@@ -27,15 +25,23 @@ public class MainActivity extends AppCompatActivity {
 
     int totalPlayerDamage = 0;
     int totalBossDamage = 0;
+    int playerHealthPoints = player1.getHealth();
+    int bossHealthPoints = obBoss.getHealth();
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        player1.setHealth(50);
+        obBoss.setHealth(50);
+         playerHealthPoints = player1.getHealth();
+         bossHealthPoints = obBoss.getHealth();
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         createCardField();
         playerHealth = (TextView)findViewById(R.id.currentHealth);
+        cardDescription = (TextView)findViewById(R.id.cardDescription);
 
         View obView = new View(getApplicationContext());
         obView.setRotationY(180f);
@@ -72,6 +78,9 @@ public class MainActivity extends AppCompatActivity {
                 checkIfDead();
                 obButton[0].setTag("Empty");
                 obButton[0].setBackgroundResource(R.drawable.ic_launcher_background);
+
+                playerHealth.setText(String.format("%s\n", playerHealthPoints));
+                makeCard(obButton[0]);
             }
         });
 
@@ -104,6 +113,9 @@ public class MainActivity extends AppCompatActivity {
                         break;
 
                 }
+                checkIfDead();
+                playerHealth.setText(String.format("%s\n", playerHealthPoints));
+                makeCard(obButton[1]);
             }
         });
 
@@ -136,6 +148,9 @@ public class MainActivity extends AppCompatActivity {
                         break;
 
                 }
+                checkIfDead();
+                playerHealth.setText(String.format("%s\n", playerHealthPoints));
+                makeCard(obButton[2]);
             }
         });
 
@@ -168,6 +183,9 @@ public class MainActivity extends AppCompatActivity {
                         break;
 
                 }
+                checkIfDead();
+                playerHealth.setText(String.format("%s\n", playerHealthPoints));
+                makeCard(obButton[3]);
             }
         });
 
@@ -200,21 +218,28 @@ public class MainActivity extends AppCompatActivity {
                         break;
 
                 }
+                checkIfDead();
+                playerHealth.setText(String.format("%s\n", playerHealthPoints));
+                makeCard(obButton[4]);
             }
         });
 
 
     }
 
+
     private void checkIfDead() {
-        if(player1.isDead(player1.health))
+        if(player1.isDead(playerHealthPoints))
         {
-            Intent playerDied = new Intent(this, game_over.class);
+            Intent playerDied = new Intent(this, GameDoneScreen.class);
+            playerDied.putExtra("playerDied", 1);
             startActivity(playerDied);
         }
-        if(obBoss.isDead(obBoss.health))
+        if(obBoss.isDead(bossHealthPoints))
         {
-
+            Intent playerDied = new Intent(this, GameDoneScreen.class);
+            playerDied.putExtra("bossDied", 2);
+            startActivity(playerDied);
         }
     }
 
@@ -322,47 +347,50 @@ public class MainActivity extends AppCompatActivity {
           if(obButton2.getTag().equals("Fire"))
           {
 
-              player1.health -= FIRE_DAMAGE;
+              playerHealthPoints -= FIRE_DAMAGE;
               totalPlayerDamage += FIRE_DAMAGE;
-              obBoss.health -= FIRE_DAMAGE;
+              bossHealthPoints -= FIRE_DAMAGE;
               totalBossDamage += FIRE_DAMAGE;
+              cardDescription.setText("You chose fire, the boss chose fire");
           }
           if(obButton2.getTag().equals("Freeze"))
           {
               int damageCalculation = FIRE_DAMAGE * ICE_MULTIPLIER;
+              cardDescription.setText("You chose ice, the boss chose fire");
 
-
-              obBoss.health -= damageCalculation;
+              bossHealthPoints -= damageCalculation;
               totalBossDamage += damageCalculation;
           }
           if(obButton2.getTag().equals("Poison"))
           {
               int damageCalculation = FIRE_DAMAGE;
+              cardDescription.setText("You chose poison, the boss chose fire");
               obBoss.setPoisoned(true);
-              player1.health -= damageCalculation;
+              playerHealthPoints -= damageCalculation;
           }
           if(obButton2.getTag().equals("Light"))
           {
               int damageCalculation = FIRE_DAMAGE;
+              cardDescription.setText("You chose light, the boss chose fire");
               if(player1.isCursed() || player1.isPoisoned())
               {
                   player1.setCursed(false);
                   player1.setPoisoned(false);
-                  player1.health += HEAL;
+                  playerHealthPoints += HEAL;
               }
               else
               {
-                  player1.health += HEAL + 3;
+                  playerHealthPoints += HEAL + 3;
               }
-              player1.health -= damageCalculation;
+              playerHealthPoints -= damageCalculation;
               totalPlayerDamage += damageCalculation;
           }
           if(obButton2.getTag().equals("Dark"))
           {
               int damageCalculation = FIRE_DAMAGE;
-
-              player1.health -= damageCalculation;
-              obBoss.health -= DARK_DAMAGE;
+              cardDescription.setText("You chose dark, the boss chose fire");
+              playerHealthPoints -= damageCalculation;
+              bossHealthPoints -= DARK_DAMAGE;
               player1.setCursed(true);
               obBoss.setCursed(true);
               totalBossDamage += DARK_DAMAGE;
@@ -371,6 +399,7 @@ public class MainActivity extends AppCompatActivity {
           }
           if(obButton2.getTag().equals("Wild"))
           {
+              cardDescription.setText("You chose wild, the boss chose fire");
               player1.setUsedWild(true);
               makeCard(obButton2);
               bossPicksFire(obButton2);
@@ -441,8 +470,10 @@ public class MainActivity extends AppCompatActivity {
             if(obButton2.getTag().equals("Fire"))
             {
 
-                player1.health -= FIRE_DAMAGE * ICE_MULTIPLIER;
+                playerHealthPoints -= FIRE_DAMAGE * ICE_MULTIPLIER;
                 totalPlayerDamage += FIRE_DAMAGE * ICE_MULTIPLIER;
+                cardDescription.setText("You chose fire, the boss chose ice");
+
             }
             if(obButton2.getTag().equals("Freeze"))
             {
@@ -452,6 +483,7 @@ public class MainActivity extends AppCompatActivity {
             {
                 obBoss.setPoisoned(true);
                 obBoss.setStunned(true);
+                cardDescription.setText("You chose poison, the boss chose ice");
             }
             if(obButton2.getTag().equals("Light"))
             {
@@ -459,26 +491,29 @@ public class MainActivity extends AppCompatActivity {
                 {
                     player1.setCursed(false);
                     player1.setPoisoned(false);
-                    player1.health += HEAL;
+                    playerHealthPoints += HEAL;
+                    cardDescription.setText("You chose light, the boss chose ice");
                 }
                 else
                 {
-                    player1.health += HEAL + 3;
+                    playerHealthPoints += HEAL + 3;
                 }
                 obBoss.setStunned(true);
             }
             if(obButton2.getTag().equals("Dark"))
             {
-                player1.health -= DARK_DAMAGE;
+                playerHealthPoints -= DARK_DAMAGE;
                 player1.setCursed(true);
                 obBoss.setCursed(true);
                 totalPlayerDamage += DARK_DAMAGE;
+                cardDescription.setText("You chose dark, the boss chose ice");
 
             }
             if(obButton2.getTag().equals("Wild"))
             {
                 player1.setUsedWild(true);
                 makeCard(obButton2);
+                cardDescription.setText("You chose wild, the boss chose ice");
                 bossPicksFreeze(obButton2);
             }
 
@@ -509,36 +544,43 @@ public class MainActivity extends AppCompatActivity {
 
             if(obButton2.getTag().equals("Fire"))
             {
+                cardDescription.setText("You chose fire, the boss chose poison");
+                bossHealthPoints -= FIRE_DAMAGE ;
+                totalBossDamage += FIRE_DAMAGE ;
+                player1.setPoisoned(true);
 
-                player1.health -= FIRE_DAMAGE * ICE_MULTIPLIER;
-                totalPlayerDamage += FIRE_DAMAGE * ICE_MULTIPLIER;
             }
             if(obButton2.getTag().equals("Freeze"))
             {
-                Toast.makeText(this, "Both players stunned", Toast.LENGTH_LONG).show();
+                cardDescription.setText("You chose ice, the boss chose poison");
+                player1.setPoisoned(true);
+                player1.setStunned(true);
             }
             if(obButton2.getTag().equals("Poison"))
             {
+                cardDescription.setText("You chose poison, the boss chose poison");
                 obBoss.setPoisoned(true);
-                obBoss.setStunned(true);
+                player1.setPoisoned(true);
             }
             if(obButton2.getTag().equals("Light"))
             {
+                cardDescription.setText("You chose light, the boss chose poison");
                 if(player1.isCursed() || player1.isPoisoned())
                 {
                     player1.setCursed(false);
                     player1.setPoisoned(false);
-                    player1.health += HEAL;
+                    playerHealthPoints += HEAL;
                 }
                 else
                 {
-                    player1.health += HEAL + 3;
+                    playerHealthPoints += HEAL + 3;
                 }
-                obBoss.setStunned(true);
+                player1.setPoisoned(true);
             }
             if(obButton2.getTag().equals("Dark"))
             {
-                player1.health -= DARK_DAMAGE;
+                cardDescription.setText("You chose dark, the boss chose poison");
+                playerHealthPoints -= DARK_DAMAGE;
                 player1.setCursed(true);
                 obBoss.setCursed(true);
                 totalPlayerDamage += DARK_DAMAGE;
@@ -546,11 +588,11 @@ public class MainActivity extends AppCompatActivity {
             }
             if(obButton2.getTag().equals("Wild"))
             {
+                Toast.makeText(this, "Picked a wild card", Toast.LENGTH_SHORT).show();
                 player1.setUsedWild(true);
                 makeCard(obButton2);
                 bossPicksFreeze(obButton2);
             }
-
 
         checkPoisonStatus();
         checkCurseStatus();
@@ -578,8 +620,9 @@ public class MainActivity extends AppCompatActivity {
 
         if(obButton2.getTag().equals("Fire"))
         {
-            obBoss.health -= FIRE_DAMAGE;
-            player1.health -= DARK_DAMAGE;
+            cardDescription.setText("You chose fire, the boss chose dark");
+            bossHealthPoints -= FIRE_DAMAGE;
+            playerHealthPoints -= DARK_DAMAGE;
             player1.setCursed(true);
             obBoss.setCursed(true);
 
@@ -589,15 +632,16 @@ public class MainActivity extends AppCompatActivity {
         }
         if(obButton2.getTag().equals("Freeze"))
         {
-            obBoss.setStunned(true);
-            obBoss.health -= DARK_DAMAGE * ICE_MULTIPLIER;
+            cardDescription.setText("You chose ice, the boss chose dark");
+            bossHealthPoints -= DARK_DAMAGE * ICE_MULTIPLIER;
             obBoss.setCursed(true);
             totalBossDamage += DARK_DAMAGE * ICE_MULTIPLIER;
         }
         if(obButton2.getTag().equals("Poison"))
         {
+            cardDescription.setText("You chose poison, the boss chose dark");
             obBoss.setPoisoned(true);
-            player1.health -= DARK_DAMAGE;
+            playerHealthPoints -= DARK_DAMAGE;
             player1.setCursed(true);
             obBoss.setCursed(true);
 
@@ -606,28 +650,30 @@ public class MainActivity extends AppCompatActivity {
         }
         if(obButton2.getTag().equals("Light"))
         {
+            cardDescription.setText("You chose light, the boss chose dark");
             if(player1.isCursed() || player1.isPoisoned())
             {
                 player1.setCursed(false);
                 player1.setPoisoned(false);
-                player1.health += HEAL;
+                playerHealthPoints += HEAL;
             }
             else
             {
-                player1.health += HEAL + 3;
+                playerHealthPoints += HEAL + 3;
             }
 
 
             player1.setCursed(true);
-            player1.health -= DARK_DAMAGE;
+            playerHealthPoints -= DARK_DAMAGE;
             obBoss.setCursed(true);
 
             totalPlayerDamage += DARK_DAMAGE;
         }
         if(obButton2.getTag().equals("Dark"))
         {
-            player1.health -= DARK_DAMAGE;
-            obBoss.health -= DARK_DAMAGE;
+            cardDescription.setText("You chose dark, the boss chose dark");
+            playerHealthPoints -= DARK_DAMAGE;
+            bossHealthPoints -= DARK_DAMAGE;
             player1.setCursed(true);
             obBoss.setCursed(true);
 
@@ -637,6 +683,7 @@ public class MainActivity extends AppCompatActivity {
         }
         if(obButton2.getTag().equals("Wild"))
         {
+            Toast.makeText(this, "Played a wild card", Toast.LENGTH_SHORT).show();
             player1.setUsedWild(true);
             makeCard(obButton2);
             bossPicksDark(obButton2);
@@ -668,46 +715,49 @@ public class MainActivity extends AppCompatActivity {
 
         if(obButton2.getTag().equals("Fire"))
         {
+            cardDescription.setText("You chose fire, the boss chose light");
             if(obBoss.isCursed() || obBoss.isPoisoned())
             {
                 obBoss.setCursed(false);
                 obBoss.setPoisoned(false);
-                obBoss.health += HEAL;
+                bossHealthPoints += HEAL;
             }
             else
             {
-                obBoss.health += HEAL + 3;
+                bossHealthPoints += HEAL + 3;
             }
 
-            obBoss.health -= FIRE_DAMAGE;
+            bossHealthPoints -= FIRE_DAMAGE;
             totalBossDamage += FIRE_DAMAGE;
 
         }
         if(obButton2.getTag().equals("Freeze"))
         {
+            cardDescription.setText("You chose ice, the boss chose light");
             if(obBoss.isCursed() || obBoss.isPoisoned())
             {
                 obBoss.setCursed(false);
                 obBoss.setPoisoned(false);
-                obBoss.health += HEAL;
+                bossHealthPoints += HEAL;
             }
             else
             {
-                obBoss.health += HEAL + 3;
+                bossHealthPoints += HEAL + 3;
             }
             player1.setStunned(true);
         }
         if(obButton2.getTag().equals("Poison"))
         {
+            cardDescription.setText("You chose poison, the boss chose light");
             if(obBoss.isCursed() || obBoss.isPoisoned())
             {
                 obBoss.setCursed(false);
                 obBoss.setPoisoned(false);
-                obBoss.health += HEAL;
+                bossHealthPoints += HEAL;
             }
             else
             {
-                obBoss.health += HEAL + 3;
+                bossHealthPoints += HEAL + 3;
             }
 
             obBoss.setPoisoned(true);
@@ -715,42 +765,44 @@ public class MainActivity extends AppCompatActivity {
         }
         if(obButton2.getTag().equals("Light"))
         {
+            cardDescription.setText("You chose light, the boss chose light");
             if(player1.isCursed() || player1.isPoisoned())
             {
                 player1.setCursed(false);
                 player1.setPoisoned(false);
-                player1.health += HEAL;
+                playerHealthPoints += HEAL;
             }
             else
             {
-                player1.health += HEAL + 3;
+                playerHealthPoints += HEAL + 3;
             }
 
             if(obBoss.isCursed() || obBoss.isPoisoned())
             {
                 obBoss.setCursed(false);
                 obBoss.setPoisoned(false);
-                obBoss.health += HEAL;
+                bossHealthPoints += HEAL;
             }
             else
             {
-                obBoss.health += HEAL + 3;
+                bossHealthPoints += HEAL + 3;
             }
         }
         if(obButton2.getTag().equals("Dark"))
         {
+            cardDescription.setText("You chose dark, the boss chose light");
             if(obBoss.isCursed() || obBoss.isPoisoned())
             {
                 obBoss.setCursed(false);
                 obBoss.setPoisoned(false);
-                obBoss.health += HEAL;
+                bossHealthPoints += HEAL;
             }
             else
             {
-                obBoss.health += HEAL + 3;
+                bossHealthPoints += HEAL + 3;
             }
 
-            obBoss.health -= DARK_DAMAGE;
+            bossHealthPoints -= DARK_DAMAGE;
             totalBossDamage += DARK_DAMAGE;
             player1.setCursed(true);
             obBoss.setCursed(true);
@@ -758,6 +810,7 @@ public class MainActivity extends AppCompatActivity {
         }
         if(obButton2.getTag().equals("Wild"))
         {
+            Toast.makeText(this, "Played a wild card", Toast.LENGTH_SHORT).show();
             player1.setUsedWild(true);
             makeCard(obButton2);
             bossPicksLight(obButton2);
@@ -770,6 +823,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void bossPicksWild(ImageButton obButton2)
     {
+        Toast.makeText(this, "Played a wild card", Toast.LENGTH_SHORT).show();
        obBoss.setUsedWild(true);
         generateBossCard();
         switch (obBossCard)
@@ -799,9 +853,9 @@ public class MainActivity extends AppCompatActivity {
     {
         if(totalBossDamage > 0 && obBoss.isPoisoned()) {
             if (player1.isUsedWild()) {
-                obBoss.health -= (3 + bossPoisonCount * 2);
+                bossHealthPoints -= (3 + bossPoisonCount * 2);
             } else {
-                obBoss.health -= (3 + bossPoisonCount);
+                bossHealthPoints -= (3 + bossPoisonCount);
             }
         }
         else
@@ -823,11 +877,11 @@ public class MainActivity extends AppCompatActivity {
         {
             if(player1.isUsedWild())
             {
-                obBoss.health -= (totalBossDamage * 2);
+                bossHealthPoints -= (totalBossDamage * 2);
             }
             else
             {
-                obBoss.health -= totalBossDamage;
+                bossHealthPoints -= totalBossDamage;
             }
 
         }

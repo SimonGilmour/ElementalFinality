@@ -52,9 +52,6 @@ public class Player {
         this.poisoned = poisoned;
     }
 
-    public boolean isNoDamage() {
-        return stunned;
-    }
 
     public void setStunned(boolean stunned) {
         this.stunned = stunned;
