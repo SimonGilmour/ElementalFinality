@@ -5,6 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".game_win"
+    android:orientation="horizontal"
+    android:configChanges="orientation|keyboardHidden|screenSize"
     android:id="@+id/frameLayout">
 
     <TextView
