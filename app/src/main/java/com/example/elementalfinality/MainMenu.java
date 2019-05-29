@@ -13,6 +13,7 @@ import android.widget.Button;
 public class MainMenu extends AppCompatActivity {
 
     Button obStart;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,6 +26,8 @@ public class MainMenu extends AppCompatActivity {
         obStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+
                 Intent goToGame = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(goToGame);
             }

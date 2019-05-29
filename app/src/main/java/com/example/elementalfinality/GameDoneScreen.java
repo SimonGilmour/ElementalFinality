@@ -20,7 +20,6 @@ public class GameDoneScreen extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_done_screen);
 
-        displayNotification();
 
 
 
@@ -49,29 +48,5 @@ public class GameDoneScreen extends AppCompatActivity {
         transaction.commit();
     }
 
-    private void displayNotification() {
-        String sChannel = "1";
 
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, sChannel)
-                .setSmallIcon(R.drawable.freeze)
-                .setContentTitle("Rate Us!")
-                .setContentText("Like the game? Rate us on our website \n https://www.ElementalFinality.com")
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
-
-
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-        {
-            CharSequence name = "channel1";
-            int importance = NotificationManager.IMPORTANCE_DEFAULT;
-            NotificationChannel channel = new NotificationChannel(sChannel,name,importance);
-
-
-            NotificationManager notificationManager = getSystemService(NotificationManager.class);
-            notificationManager.createNotificationChannel(channel);
-
-            NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(this);
-            notificationManagerCompat.notify(1, builder.build());
-        }
-
-    }
 }

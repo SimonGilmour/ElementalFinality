@@ -19,4 +19,9 @@ public class PlayerScore {
         this(name, score);
         this.id = id;
     }
+
+    @Override
+    public String toString() {
+        return String.format("Name: %s Score: %d", this.name, this.score);
+    }
 }
