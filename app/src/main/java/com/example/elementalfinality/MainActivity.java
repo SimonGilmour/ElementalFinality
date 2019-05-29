@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         player1.setHealth(50);
-        obBoss.setHealth(50);
+        obBoss.setHealth(10);
          playerHealthPoints = player1.getHealth();
          bossHealthPoints = obBoss.getHealth();
 
@@ -303,12 +303,12 @@ public class MainActivity extends AppCompatActivity {
                 case 2:
 
                     obButton[i].setTag("Poison");
-                    obButton[i].setBackgroundResource(R.drawable.freeze);
+                    obButton[i].setBackgroundResource(R.drawable.poison);
                     break;
                 case 3:
 
                     obButton[i].setTag("Light");
-                    obButton[i].setBackgroundResource(R.drawable.freeze);
+                    obButton[i].setBackgroundResource(R.drawable.light);
                     break;
                 case 4:
                     obButton[i].setTag("Dark");
@@ -316,7 +316,7 @@ public class MainActivity extends AppCompatActivity {
                     break;
                 case 5:
                     obButton[i].setTag("Wild");
-                    obButton[i].setBackgroundResource(R.drawable.freeze);
+                    obButton[i].setBackgroundResource(R.drawable.wild);
                     break;
             }
 
@@ -421,25 +421,25 @@ public class MainActivity extends AppCompatActivity {
             case 1:
 
                 obButton2.setTag("Fire");
-                obButton2.setBackgroundResource(R.drawable.freeze);
+                obButton2.setBackgroundResource(R.drawable.fire);
                 break;
             case 2:
 
                 obButton2.setTag("Poison");
-                obButton2.setBackgroundResource(R.drawable.freeze);
+                obButton2.setBackgroundResource(R.drawable.poison);
                 break;
             case 3:
 
                 obButton2.setTag("Light");
-                obButton2.setBackgroundResource(R.drawable.freeze);
+                obButton2.setBackgroundResource(R.drawable.light);
                 break;
             case 4:
                 obButton2.setTag("Dark");
-                obButton2.setBackgroundResource(R.drawable.freeze);
+                obButton2.setBackgroundResource(R.drawable.dark);
                 break;
             case 5:
                 obButton2.setTag("Wild");
-                obButton2.setBackgroundResource(R.drawable.freeze);
+                obButton2.setBackgroundResource(R.drawable.wild);
                 break;
         }
 

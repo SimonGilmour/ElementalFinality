@@ -40,11 +40,11 @@ public class GameDoneScreen extends AppCompatActivity {
 
         if(playerDied == 1)
         {
-            transaction.replace(R.id.contentFragment, finalityWon);
+            transaction.replace(R.id.contentFragment, bossWon);
         }
         else
         {
-            transaction.replace(R.id.contentFragment, bossWon);
+            transaction.replace(R.id.contentFragment, finalityWon);
         }
         transaction.commit();
     }
