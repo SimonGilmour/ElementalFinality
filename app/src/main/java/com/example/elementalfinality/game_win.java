@@ -55,7 +55,6 @@ public class game_win extends Fragment implements View.OnClickListener {
                 PlayerScore playerScore = new PlayerScore(enterName.getText().toString(), 10);
                 db.createScore(playerScore);
                 break;
-            case R.id.btnViewScore:
 
         }
         db.close();
