@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -145,6 +144,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (obBoss.isDead(bossHealthPoints)) {
             Intent playerDied = new Intent(this, GameDoneScreen.class);
             playerDied.putExtra("bossDied", 2);
+            playerDied.putExtra("score", totalBossDamage);
             startActivity(playerDied);
         }
     }

@@ -5,6 +5,6 @@
         android:id="@+id/resetScoreboard"
         android:title="Reset Scoreboard" />
     <item
-        android:id="@+id/surprise"
-        android:title="Surprise" />
+        android:id="@+id/rateUs"
+        android:title="Rate Us" />
 </menu>

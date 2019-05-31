@@ -10,7 +10,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class PlayerScoreHelper extends SQLiteOpenHelper {
 
     public static final String DB_NAME = "score.db";
-    public static final int DB_VERSION = 1;
+    public static final int DB_VERSION = 3;
     public static final String TABLE_NAME = "ScoreBoard";
     public static final String ID = "_id";
     public static final String NAME = "name";
@@ -28,9 +28,9 @@ public class PlayerScoreHelper extends SQLiteOpenHelper {
     {
         String sCreate = "CREATE TABLE " +
                 TABLE_NAME + "(" +
-                ID + "integer primary key autoincrement, " +
-                NAME + "String not null, " +
-                SCORE + "int not null);";
+                ID + " integer primary key autoincrement, " +
+                NAME + " String not null, " +
+                SCORE + " int not null);";
 
         sqLiteDatabase.execSQL(sCreate);
     }

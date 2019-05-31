@@ -6,6 +6,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -20,8 +21,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-
-import java.util.ArrayList;
 
 
 public class MainMenu extends AppCompatActivity {
@@ -86,7 +85,6 @@ public class MainMenu extends AppCompatActivity {
                 startActivity(goToGame);
             }
         });
-        displayNotification();
     }
 
     @Override
@@ -99,7 +97,8 @@ public class MainMenu extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.surprise) {
+        if (id == R.id.rateUs) {
+            displayNotification();
             return true;
         }
         if (id == R.id.resetScoreboard) {
@@ -110,7 +109,7 @@ public class MainMenu extends AppCompatActivity {
     }
 
     private void useNewLocation(Location location) {
-        tvLon.setText("He knows your location! ( " + location.getLongitude() + "    ,     " + location.getLatitude() + ")" + "\n" + "finish him off for good this time!");
+        tvLon.setText("He knows your location!\n ( " + location.getLongitude() + ", " + location.getLatitude() + ")" + "\n" + "finish him off for good this time!");
     }
 
     //When the app stops temporarily
@@ -132,24 +131,41 @@ public class MainMenu extends AppCompatActivity {
 
     public void displayNotification() {
 
-        Intent intent = new Intent(this, MainMenu.class);
-        PendingIntent contentIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        NotificationCompat.Builder b = new NotificationCompat.Builder(this);
-
-        b.setAutoCancel(true)
-                .setDefaults(Notification.DEFAULT_ALL)
-                .setWhen(System.currentTimeMillis())
-                .setTicker("Hearty365")
-                .setSmallIcon(5)
-                .setContentTitle("Default notification")
-                .setContentText("Lorem ipsum dolor sit amet, consectetur adipiscing elit.")
-                .setDefaults(Notification.DEFAULT_LIGHTS | Notification.DEFAULT_SOUND)
-                .setContentIntent(contentIntent)
-                .setContentInfo("Info");
+        Intent intent = new Intent(this, RateUs.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
 
 
-        NotificationManager notificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.notify(1, b.build());
+        String CHANNEL_ID = "111";
+        int notificationId = 101;
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
+                .setSmallIcon(R.drawable.finality)
+                .setContentTitle("Rate Us!")
+                .setContentText("Please Rate Us at https://ElementalFinality.com")
+                .setStyle(new NotificationCompat.BigTextStyle()
+                        .bigText("Please Rate Us at https://ElementalFinality.com"))
+                .setContentIntent(pendingIntent)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = "Rate Us";
+            String description = "Please Rate Us at https://ElementalFinality.com";
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+            channel.setDescription(description);
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+        notificationManager.notify(notificationId, builder.build());
+
+
+
+
+
     }
+
 }

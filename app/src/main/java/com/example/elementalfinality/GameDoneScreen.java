@@ -14,6 +14,7 @@ import android.os.Bundle;
 public class GameDoneScreen extends AppCompatActivity {
     int playerDied;
     int bossDied;
+    int score;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +29,7 @@ public class GameDoneScreen extends AppCompatActivity {
         {
              playerDied = extras.getInt("playerDied");
             bossDied = extras.getInt("bossDied");
+            score = extras.getInt("score");
         }
 
 
@@ -37,13 +39,17 @@ public class GameDoneScreen extends AppCompatActivity {
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction transaction = fm.beginTransaction();
 
+
         if(playerDied == 1)
         {
             transaction.replace(R.id.contentFragment, bossWon);
         }
         else
         {
+            Bundle b = new Bundle();
+            b.putInt("score", score);
             transaction.replace(R.id.contentFragment, finalityWon);
+            finalityWon.setArguments(b);
         }
         transaction.commit();
     }
