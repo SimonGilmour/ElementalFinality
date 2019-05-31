@@ -13,9 +13,11 @@ import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     TextView playerHealth;
+    TextView bossHealth;
     TextView cardDescription;
     ImageButton[] obButton = new ImageButton[5];
     TextView[] obCardDescription = new TextView[5];
+    TextView obTotalDamage;
     String obBossCard;
     Player player1 = new Player(0, false, false, false, false, false);
     Player obBoss = new Player(0, false, false, false, false, false);
@@ -94,13 +96,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         checkIfDead();
         cardSlot.setTag("Empty");
         playerHealth.setText(String.format("%s\n", playerHealthPoints));
+        bossHealth.setText(String.format("%s \n", bossHealthPoints));
         makeCard(cardSlot, obView);
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         player1.setHealth(50);
-        obBoss.setHealth(10);
+        obBoss.setHealth(50);
         playerHealthPoints = player1.getHealth();
         bossHealthPoints = obBoss.getHealth();
 
@@ -112,6 +115,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         createCardField();
         playerHealth = (TextView) findViewById(R.id.currentHealth);
         cardDescription = (TextView) findViewById(R.id.cardDescription);
+        obTotalDamage = (TextView)findViewById(R.id.totalDamagePlayed);
+        bossHealth = (TextView)findViewById(R.id.tvBossHealth);
+
 
         View obView = new View(getApplicationContext());
         obView.setRotationY(180f);
@@ -302,6 +308,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         checkPoisonStatus();
         checkCurseStatus();
+        obTotalDamage.setText("You dealt" + totalBossDamage + "damage and the opponent dealt" + totalPlayerDamage + "damage");
     }
 
     private void makeCard(ImageButton obButton2, TextView obView) {
@@ -408,6 +415,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         checkPoisonStatus();
         checkCurseStatus();
+        obTotalDamage.setText("You dealt" + totalBossDamage + "damage and the opponent dealt" + totalPlayerDamage + "damage");
     }
 
     private void bossPicksPoison(ImageButton obButton2, TextView obView) {
@@ -473,6 +481,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         checkPoisonStatus();
         checkCurseStatus();
+        obTotalDamage.setText("You dealt" + totalBossDamage + "damage and the opponent dealt" + totalPlayerDamage + "damage");
     }
 
 
@@ -558,6 +567,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         checkPoisonStatus();
         checkCurseStatus();
+        obTotalDamage.setText("You dealt" + totalBossDamage + "damage and the opponent dealt" + totalPlayerDamage + "damage");
     }
 
     private void bossPicksLight(ImageButton obButton2, TextView obView) {
@@ -659,6 +669,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         checkPoisonStatus();
         checkCurseStatus();
+        obTotalDamage.setText("You dealt" + totalBossDamage + "damage and the opponent dealt" + totalPlayerDamage + "damage");
     }
 
     private void bossPicksWild(ImageButton obButton2, TextView obView) {
